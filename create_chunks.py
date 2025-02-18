@@ -382,34 +382,6 @@ class CSlamPredictor:
                     test_rgb, test_pts3d, test_msk, test_focal, test_c2w)
 
 
-    def convert_scene_output_to_glb(self, outdir, imgs, pts3d, mask, focals, cams2world, cam_size=0.05,
-                                    cam_color=None,
-                                    transparent_cams=False, silent=False):
-        scene = trimesh.Scene()
-        meshes = []
-        for i in range(len(imgs)):
-            meshes.append(pts3d_to_trimesh(imgs[i], pts3d[i], mask[i]))
-        mesh = trimesh.Trimesh(**cat_meshes(meshes))
-        scene.add_geometry(mesh)
-
-        # add each camera
-        for i, pose_c2w in enumerate(cams2world):
-            if isinstance(cam_color, list):
-                camera_edge_color = cam_color[i]
-            else:
-                camera_edge_color = cam_color or CAM_COLORS[i % len(CAM_COLORS)]
-            add_scene_cam(scene, pose_c2w, camera_edge_color,
-                        None if transparent_cams else imgs[i], focals[i],
-                        imsize=imgs[i].shape[1::-1], screen_width=cam_size)
-
-        # rot = np.eye(4)
-        # rot[:3, :3] = Rotation.from_euler('y', np.deg2rad(180)).as_matrix()
-        # scene.apply_transform(np.linalg.inv(cams2world[0] @ OPENGL @ rot))
-        outfile = os.path.join(outdir, 'scene.glb')
-        if not silent:
-            print('(exporting 3D scene to', outfile, ')')
-        scene.export(file_obj=outfile)
-
     def extract_rotation_translation(self, cams2world):
         R = cams2world[:3, :3]
         # Extract translation vector (top-right 3x1 column)
@@ -600,4 +572,3 @@ if __name__ == '__main__':
         img_paths_subset, img_paths_subset_index = select_random_chunk(img_paths)
         predictor.generate_new_scene(file_list=img_paths_subset, save_dir=save_dir, device=device)
     predictor.combine_scenes()
-    http://143.89.144.130/media/siyanhu/T7/colmap_7s_camb/mvdust3r/scene_redkitchen/20250218
