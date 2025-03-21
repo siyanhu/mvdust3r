@@ -1,5 +1,5 @@
 imageio[ffmpeg]
-numpy==1.26.4
+numpy
 roma
 gradio
 matplotlib
@@ -10,10 +10,10 @@ einops
 trimesh
 tensorboard
 pyglet<2
-huggingface-hub[torch]>=0.22
+huggingface-hub[torch]
 h5py
 scikit-learn
 tensorflow
-gsplat==1.4.0
-torchmetrics[image]>=1.6.0
-pillow>=11.0.0
+gsplat
+torchmetrics[image]
+pillow
